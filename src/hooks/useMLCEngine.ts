@@ -5,7 +5,6 @@ import {
   CreateMLCEngine,
   MLCEngine,
   ChatCompletionRequestStreaming,
-  ChatCompletionRequestNonStreaming,
 } from "@mlc-ai/web-llm"; // Ensure you import necessary types
 import hljs from "highlight.js";
 
