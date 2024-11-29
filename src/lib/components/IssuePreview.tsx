@@ -3,6 +3,7 @@
 import React from "react";
 import { Badge } from "./ui/badge";
 import { Avatar, AvatarFallback } from "./ui/avatar";
+import { cn } from "@/lib/utils"; // Ensure you have a utility for classNames
 
 interface IssueData {
   title: string;
@@ -19,50 +20,59 @@ interface IssuePreviewProps {
 
 const IssuePreview: React.FC<IssuePreviewProps> = ({ issueData }) => {
   return (
-    <div className="p-6 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 shadow-md">
-      <h2 className="text-2xl font-semibold mb-4 text-gray-900 dark:text-gray-100">
-        {issueData.title}
-      </h2>
+    <div
+      className={cn(
+        "p-6 rounded-md shadow-md transition-colors duration-300",
+        "bg-white border border-gray-300 text-gray-900",
+        "dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
+      )}
+    >
+      <h2 className="text-2xl font-semibold mb-4">{issueData.title}</h2>
 
       {/* Priority Badge */}
       <Badge
         variant="destructive"
-        className={getPriorityColor(issueData.priority)}
+        className={cn("mb-4", getPriorityColor(issueData.priority))}
       >
         {issueData.priority.toUpperCase()}
       </Badge>
 
       {/* Estimated Time */}
-      <div className="mt-4">
-        <span className="text-sm text-gray-600 dark:text-gray-400">
-          Estimated Time: {issueData.estimated_time}
-        </span>
+      <div className="flex items-center text-sm text-gray-600 dark:text-gray-400 mb-4">
+        <span className="font-medium">Estimated Time:</span>{" "}
+        {issueData.estimated_time}
       </div>
 
       {/* Labels */}
-      <div className="mt-4 flex flex-wrap gap-2">
-        {issueData.labels.map((label) => (
-          <Badge
-            key={label}
-            className={`bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200`}
-          >
-            {label}
-          </Badge>
-        ))}
-      </div>
+      {issueData.labels.length > 0 && (
+        <div className="flex flex-wrap gap-2 mb-4">
+          {issueData.labels.map((label) => (
+            <Badge
+              key={label}
+              className={cn(
+                "px-2 py-1 text-xs font-medium",
+                "bg-gray-200 text-gray-700",
+                "dark:bg-gray-600 dark:text-gray-200"
+              )}
+            >
+              {label}
+            </Badge>
+          ))}
+        </div>
+      )}
 
       {/* Description */}
-      <p className="mt-6 text-gray-700 dark:text-gray-300">
+      <p className="mb-6 text-gray-700 dark:text-gray-300">
         {issueData.description}
       </p>
 
       {/* Assignees */}
-      <div className="mt-6">
-        <h3 className="text-sm font-medium text-gray-700 dark:text-gray-200">
+      <div>
+        <h3 className="text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
           Assignees:
         </h3>
         {issueData.assignees && issueData.assignees.length > 0 ? (
-          <div className="flex space-x-2 mt-2">
+          <div className="flex space-x-2">
             {issueData.assignees.map((assignee) => (
               <Avatar
                 key={assignee}

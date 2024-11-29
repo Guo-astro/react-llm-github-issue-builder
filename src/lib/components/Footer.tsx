@@ -1,35 +1,40 @@
-// packages/component-library/src/components/Footer.tsx
+// packages/component-library/src/components/ErrorDisplay.tsx
 
 import React from "react";
 
-const Footer: React.FC = () => {
+interface ErrorDisplayProps {
+  error: string | null;
+}
+
+const ErrorDisplay: React.FC<ErrorDisplayProps> = ({ error }) => {
+  if (!error) return null;
+
   return (
-    <footer className="mt-8 py-6 border-t border-gray-200 dark:border-gray-700">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center text-sm text-gray-600 dark:text-gray-400">
-        Made with <span className="mx-1 text-red-500 dark:text-red-400">♥</span>{" "}
-        using
-        <a
-          href="https://webllm.mlc.ai/"
-          className="mx-1 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-600 hover:underline"
-          target="_blank"
-          rel="noopener noreferrer"
+    <div className="mt-4">
+      <div className="flex items-center p-4 bg-red-50 dark:bg-red-900 rounded-md shadow-sm">
+        <svg
+          className="w-5 h-5 text-red-500 dark:text-red-400 mr-3"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          aria-hidden="true"
         >
-          MLC Web LLM
-        </a>
-        &
-        <a
-          href="https://github.com/huggingface/smollm"
-          className="mx-1 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-600 hover:underline"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          SmolLM2
-        </a>
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M12 9v2m0 4h.01M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z"
+          />
+        </svg>
+        <span className="text-sm font-medium text-red-700 dark:text-red-300">
+          {error}
+        </span>
       </div>
-    </footer>
+    </div>
   );
 };
 
-Footer.displayName = "Footer";
+ErrorDisplay.displayName = "ErrorDisplay";
 
-export default Footer;
+export default ErrorDisplay;

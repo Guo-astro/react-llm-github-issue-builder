@@ -116,7 +116,7 @@ Please include appropriate labels, priority level, and time estimation.`);
       />
 
       {/* Footer */}
-      <Footer />
+      <Footer error={null} />
     </div>
   );
 };

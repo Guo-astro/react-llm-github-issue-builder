@@ -1,56 +1,60 @@
-// components/DarkModeToggle.tsx
-import React from "react";
+// packages/component-library/src/components/DarkModeToggle.tsx
 
-interface DarkModeToggleProps {
-  isDarkMode: boolean;
-  toggleDarkMode: () => void;
-}
+import React, { useEffect, useState } from "react";
+import { Sun, Moon } from "lucide-react"; // Using lucide-react for consistent icons
+import { cn } from "@/lib/utils"; // Ensure you have a utility for classNames
 
-const DarkModeToggle: React.FC<DarkModeToggleProps> = ({
-  isDarkMode,
-  toggleDarkMode,
-}) => {
+const DarkModeToggle: React.FC = () => {
+  const [isDark, setIsDark] = useState<boolean>(false);
+
+  // On component mount, check for saved user preference or system preference
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme) {
+      setIsDark(savedTheme === "dark");
+      document.documentElement.classList.toggle("dark", savedTheme === "dark");
+    } else {
+      // If no saved preference, use system preference
+      const prefersDark = window.matchMedia(
+        "(prefers-color-scheme: dark)"
+      ).matches;
+      setIsDark(prefersDark);
+      document.documentElement.classList.toggle("dark", prefersDark);
+    }
+  }, []);
+
+  // Toggle theme and save preference
+  const toggleTheme = () => {
+    const newIsDark = !isDark;
+    setIsDark(newIsDark);
+    document.documentElement.classList.toggle("dark", newIsDark);
+    localStorage.setItem("theme", newIsDark ? "dark" : "light");
+  };
+
   return (
     <button
-      onClick={toggleDarkMode}
-      className="p-2 rounded-md text-gray-400 hover:text-gray-500 dark:text-gray-300 dark:hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
+      onClick={toggleTheme}
+      className={cn(
+        "p-2 rounded-full border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200",
+        "bg-gray-100 dark:bg-gray-700",
+        "hover:bg-gray-200 dark:hover:bg-gray-600"
+      )}
       aria-label="Toggle Dark Mode"
     >
-      {isDarkMode ? (
+      {isDark ? (
         // Sun Icon for Light Mode
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M12 3v1m0 16v1m8.66-8.66h-1M4.34 12.34h-1m15.364 4.95l-.707-.707M6.343 6.343l-.707-.707m12.02 12.02l-.707-.707M6.343 17.657l-.707-.707M12 5a7 7 0 100 14 7 7 0 000-14z"
-          />
-        </svg>
+        <Sun className="h-5 w-5 text-yellow-500" aria-hidden="true" />
       ) : (
         // Moon Icon for Dark Mode
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z"
-          />
-        </svg>
+        <Moon
+          className="h-5 w-5 text-gray-900 dark:text-gray-200"
+          aria-hidden="true"
+        />
       )}
     </button>
   );
 };
+
+DarkModeToggle.displayName = "DarkModeToggle";
 
 export default DarkModeToggle;
