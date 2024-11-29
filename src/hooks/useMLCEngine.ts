@@ -1,6 +1,12 @@
 // hooks/useMLCEngine.ts
 import { useState, useRef, useEffect } from "react";
-import { prebuiltAppConfig, CreateMLCEngine, MLCEngine } from "@mlc-ai/web-llm";
+import {
+  prebuiltAppConfig,
+  CreateMLCEngine,
+  MLCEngine,
+  ChatCompletionRequestStreaming,
+  ChatCompletionRequestNonStreaming,
+} from "@mlc-ai/web-llm"; // Ensure you import necessary types
 import hljs from "highlight.js";
 
 interface Usage {
@@ -83,14 +89,16 @@ const useMLCEngine = (): UseMLCEngineReturn => {
       } catch (err) {
         throw new Error("Invalid JSON schema");
       }
-      const response_format = {
+
+      // Define the response format with explicit type
+      const response_format: { type: "json_object"; schema: string } = {
         type: "json_object",
         schema: JSON.stringify(parsedSchema),
       };
 
-      // Prepare request
-      const request = {
-        stream: true,
+      // Prepare request with explicit stream type
+      const request: ChatCompletionRequestStreaming = {
+        stream: true, // Explicitly set to true
         stream_options: { include_usage: true },
         messages: [{ role: "user", content: prompt }],
         max_tokens: 512,
